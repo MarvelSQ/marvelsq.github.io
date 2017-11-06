@@ -565,9 +565,13 @@ body {
 .env .browser,
 .env .dev {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     padding: 5px;
     border-radius: 25px;
+}
+
+.env *>img,.env *>embed{
+    vertical-align: middle;
 }
 
 @media (max-width:520px) {
