@@ -1,0 +1,20 @@
+language: node_js
+node_js:
+  - "10"
+
+jobs:
+  include:
+    - stage: deploy
+      script: echo "Deploying to page ..." && npm run build
+      deploy:
+        provider: pages
+        github-token: $GITHUB_TOKEN
+        skip_cleanup: true
+        keep-history: true
+        target-branch: empty
+        local-dir: dist
+        on:
+          branch: dev
+cache:
+  directories:
+    - "node_modules"
