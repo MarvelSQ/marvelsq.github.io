@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowUpRight,
@@ -19,18 +20,17 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import {
-  education,
-  experience,
-  hero,
-  highlights,
-  projects,
-  repos,
-  skills,
-  story,
-} from "./data/profile";
+import { content, uiText, type Locale } from "./data/profile";
 
-function SectionTitle({ title, icon }: { title: string; icon?: ReactNode }) {
+function SectionTitle({
+  title,
+  icon,
+  eyebrow,
+}: {
+  title: string;
+  icon?: ReactNode;
+  eyebrow: string;
+}) {
   return (
     <div className="mb-6 flex items-center gap-3 text-white">
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-brand-200">
@@ -38,7 +38,7 @@ function SectionTitle({ title, icon }: { title: string; icon?: ReactNode }) {
       </div>
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-          Section
+          {eyebrow}
         </p>
         <h2 className="text-2xl font-semibold">{title}</h2>
       </div>
@@ -47,6 +47,40 @@ function SectionTitle({ title, icon }: { title: string; icon?: ReactNode }) {
 }
 
 function App() {
+  const resolveLocale = (value: string | null): Locale => {
+    if (value === "zh") return "zh";
+    return "en";
+  };
+
+  const initialLocale = (): Locale => {
+    const search = new URL(window.location.href).searchParams.get("lang");
+    if (search) return resolveLocale(search);
+    const sys = navigator.language?.toLowerCase() ?? "en";
+    return sys.startsWith("zh") ? "zh" : "en";
+  };
+
+  const [lang, setLang] = useState<Locale>(initialLocale);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", lang);
+    window.history.replaceState({}, "", url);
+  }, [lang]);
+
+  const t = content[lang];
+  const ui = uiText[lang];
+
+  const {
+    hero,
+    highlights,
+    skills,
+    projects,
+    experience,
+    education,
+    story,
+    repos,
+  } = t;
+
   return (
     <div className="relative min-h-screen bg-grid bg-[size:24px_24px]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(79,92,245,0.16),transparent_25%),radial-gradient(circle_at_80%_0%,rgba(37,221,186,0.2),transparent_20%)]" />
@@ -64,18 +98,25 @@ function App() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLang(lang === "en" ? "zh" : "en")}
+              >
+                {lang === "en" ? "中文" : "English"}
+              </Button>
               <Button asChild variant="outline" size="sm">
                 <a
                   href="https://github.com/marvelsq"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Github className="mr-2 h-4 w-4" /> Github
+                  <Github className="mr-2 h-4 w-4" /> {ui.github}
                 </a>
               </Button>
               <Button asChild size="sm">
                 <a href={`mailto:${hero.email}`}>
-                  <Mail className="mr-2 h-4 w-4" /> Contact
+                  <Mail className="mr-2 h-4 w-4" /> {ui.contact}
                 </a>
               </Button>
             </div>
@@ -112,11 +153,12 @@ function App() {
               <CardContent className="relative flex flex-wrap items-center gap-4 pt-0">
                 <Button asChild size="lg">
                   <a href={`mailto:${hero.email}`}>
-                    <Mail className="mr-2 h-5 w-5" /> Email me
+                    <Mail className="mr-2 h-5 w-5" /> {ui.emailMe}
                   </a>
                 </Button>
                 <Badge className="flex items-center gap-2 bg-emerald-400/15 text-emerald-100">
-                  <Sparkles className="h-4 w-4 text-emerald-200" /> Open to work
+                  <Sparkles className="h-4 w-4 text-emerald-200" />
+                  {ui.openToWork}
                 </Badge>
               </CardContent>
             </Card>
@@ -150,8 +192,8 @@ function App() {
           </section>
 
           <section>
-            <SectionTitle title="Skills" />
-            <Tabs defaultValue={skills[0].title} className="w-full">
+            <SectionTitle title={ui.skills} eyebrow={ui.sectionLabel} />
+            <Tabs defaultValue={skills[0]?.title ?? ""} className="w-full">
               <TabsList>
                 {skills.map((skill) => (
                   <TabsTrigger key={skill.title} value={skill.title}>
@@ -178,7 +220,8 @@ function App() {
 
           <section>
             <SectionTitle
-              title="Projects"
+              title={ui.projects}
+              eyebrow={ui.sectionLabel}
               icon={<Sparkles className="h-5 w-5" />}
             />
             <div className="section-grid">
@@ -194,7 +237,8 @@ function App() {
                           rel="noreferrer"
                           className="text-sm font-normal text-brand-200 hover:text-brand-100"
                         >
-                          View <ArrowUpRight className="ml-1 inline h-4 w-4" />
+                          {ui.viewProject}
+                          <ArrowUpRight className="ml-1 inline h-4 w-4" />
                         </a>
                       ) : null}
                     </CardTitle>
@@ -223,7 +267,8 @@ function App() {
 
           <section>
             <SectionTitle
-              title="Experience"
+              title={ui.experience}
+              eyebrow={ui.sectionLabel}
               icon={<Briefcase className="h-5 w-5" />}
             />
             <div className="flex flex-col gap-4">
@@ -260,7 +305,8 @@ function App() {
           <section className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <SectionTitle
-                title="Education"
+                title={ui.education}
+                eyebrow={ui.sectionLabel}
                 icon={<GraduationCap className="h-5 w-5" />}
               />
               <div className="flex flex-col gap-4">
@@ -286,7 +332,7 @@ function App() {
             <Card className="relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-brand-500/10" />
               <CardHeader className="relative">
-                <SectionTitle title="Front-end Path" />
+                <SectionTitle title={ui.path} eyebrow={ui.sectionLabel} />
                 <CardDescription className="text-base leading-relaxed text-white/80">
                   {story}
                 </CardDescription>
@@ -296,8 +342,7 @@ function App() {
         </main>
 
         <footer className="pb-4 text-center text-sm text-white/60">
-          Crafted with React, Tailwind CSS, and shadcn/ui. Build outputs to the
-          dist directory via `npm run build`.
+          {ui.footer}
         </footer>
       </div>
     </div>
