@@ -2,7 +2,7 @@ name: Deploy dist to Pages
 
 on:
   push:
-    branches: [master]
+    branches: [master, feat/v2]
   workflow_dispatch:
 
 permissions:
