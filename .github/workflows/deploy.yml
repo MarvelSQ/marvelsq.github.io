@@ -33,12 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          tar -czf /tmp/dist.tar.gz -C dist .
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout --orphan deploy
           git reset --hard
           rm -rf ./*
-          cp -r dist/* .
+          tar -xzf /tmp/dist.tar.gz -C .
           touch .nojekyll
           git add .
           git commit -m "chore: deploy ${GITHUB_SHA}"
