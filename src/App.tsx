@@ -7,7 +7,9 @@ import {
   GraduationCap,
   Mail,
   MapPin,
+  Moon,
   Sparkles,
+  Sun,
 } from "lucide-react";
 
 import { Badge } from "./components/ui/badge";
@@ -47,6 +49,15 @@ function SectionTitle({
 }
 
 function App() {
+  const getInitialTheme = (): "light" | "dark" => {
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem("theme");
+    if (stored === "light" || stored === "dark") return stored;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
   const resolveLocale = (value: string | null): Locale => {
     if (value === "zh") return "zh";
     return "en";
@@ -60,12 +71,46 @@ function App() {
   };
 
   const [lang, setLang] = useState<Locale>(initialLocale);
+  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
+  const [isSystemTheme, setIsSystemTheme] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return !localStorage.getItem("theme");
+  });
 
   useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set("lang", lang);
     window.history.replaceState({}, "", url);
   }, [lang]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const syncSystemTheme = (event: MediaQueryListEvent | MediaQueryList) => {
+      if (isSystemTheme) {
+        setTheme(event.matches ? "dark" : "light");
+      }
+    };
+
+    syncSystemTheme(media);
+    media.addEventListener("change", syncSystemTheme);
+    return () => media.removeEventListener("change", syncSystemTheme);
+  }, [isSystemTheme]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+
+    if (isSystemTheme) {
+      localStorage.removeItem("theme");
+    } else {
+      localStorage.setItem("theme", theme);
+    }
+  }, [theme, isSystemTheme]);
 
   const t = content[lang];
   const ui = uiText[lang];
@@ -106,6 +151,44 @@ function App() {
                 onClick={() => setLang(lang === "en" ? "zh" : "en")}
               >
                 {lang === "en" ? "中文" : "English"}
+              </Button>
+              <Button
+                variant={isSystemTheme ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setIsSystemTheme(true);
+                  setTheme(
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                      ? "dark"
+                      : "light"
+                  );
+                }}
+                className="gap-2"
+              >
+                <Sparkles className="h-4 w-4" />
+                {lang === "en" ? "System" : "跟随系统"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setIsSystemTheme(false);
+                  setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+                }}
+                className="gap-2"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+                {isSystemTheme
+                  ? lang === "en"
+                    ? "Auto"
+                    : "自动"
+                  : theme === "dark"
+                  ? "Light"
+                  : "Dark"}
               </Button>
               <Button asChild variant="outline" size="sm">
                 <a

@@ -5,6 +5,33 @@
 @tailwind utilities;
 
 :root {
+  --background: 210 38% 98%;
+  --foreground: 220 15% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 15% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 15% 16%;
+  --primary: 221 83% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 32% 93%;
+  --secondary-foreground: 220 16% 28%;
+  --muted: 214 32% 93%;
+  --muted-foreground: 220 8% 46%;
+  --accent: 214 32% 93%;
+  --accent-foreground: 220 15% 16%;
+  --destructive: 0 68% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 28% 88%;
+  --input: 214 28% 88%;
+  --ring: 221 83% 55%;
+  --radius: 0.9rem;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark {
   --background: 222 47% 10%;
   --foreground: 220 13% 95%;
   --card: 222 47% 12%;
@@ -25,10 +52,6 @@
   --input: 222 24% 18%;
   --ring: 221 83% 60%;
   --radius: 0.9rem;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -97,5 +120,21 @@ body {
 
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  .bg-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.06) 1px,
+      transparent 0
+    );
+  }
+
+  .dark .bg-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 0
+    );
   }
 }
