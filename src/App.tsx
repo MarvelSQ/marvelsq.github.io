@@ -85,10 +85,10 @@ function App() {
     <div className="relative min-h-screen bg-grid bg-[size:24px_24px]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(79,92,245,0.16),transparent_25%),radial-gradient(circle_at_80%_0%,rgba(37,221,186,0.2),transparent_20%)]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 pb-16 pt-10 md:px-8">
+      <div className="relative mx-auto flex max-w-7xl flex-col gap-10 px-4 pb-16 pt-10 sm:gap-12 sm:px-6 md:px-8">
         <header className="sticky top-4 z-10">
-          <div className="glass flex items-center justify-between rounded-2xl px-5 py-3">
-            <div className="flex items-center gap-3">
+          <div className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-3 md:flex-nowrap">
+            <div className="flex min-w-[220px] flex-1 items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg shadow-brand-500/40">
                 <Sparkles className="h-5 w-5" />
               </div>
@@ -97,7 +97,7 @@ function App() {
                 <p className="text-lg font-semibold">{hero.name}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-1 flex-wrap items-center justify-end gap-2 md:flex-nowrap">
               <Button
                 variant="outline"
                 size="sm"
@@ -123,7 +123,7 @@ function App() {
           </div>
         </header>
 
-        <main className="flex flex-col gap-12">
+        <main className="flex flex-col gap-10 md:gap-12">
           <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <Card className="overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-transparent to-emerald-400/10" />
@@ -132,7 +132,7 @@ function App() {
                   <MapPin className="h-4 w-4" />
                   <span>{hero.location}</span>
                 </div>
-                <CardTitle className="text-4xl text-white md:text-5xl">
+                <CardTitle className="text-3xl text-white sm:text-4xl md:text-5xl">
                   {hero.role}
                 </CardTitle>
                 <CardDescription className="text-lg text-white/80">
@@ -193,29 +193,54 @@ function App() {
 
           <section>
             <SectionTitle title={ui.skills} eyebrow={ui.sectionLabel} />
-            <Tabs defaultValue={skills[0]?.title ?? ""} className="w-full">
-              <TabsList>
+            <div className="hidden sm:block">
+              <Tabs defaultValue={skills[0]?.title ?? ""} className="w-full">
+                <TabsList className="w-full justify-start gap-1 overflow-x-auto -mx-2 px-2 scrollbar-none sm:mx-0 sm:px-0">
+                  {skills.map((skill) => (
+                    <TabsTrigger key={skill.title} value={skill.title}>
+                      {skill.title}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
                 {skills.map((skill) => (
-                  <TabsTrigger key={skill.title} value={skill.title}>
-                    {skill.title}
-                  </TabsTrigger>
+                  <TabsContent key={skill.title} value={skill.title}>
+                    <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                      {skill.items.map((item) => (
+                        <div
+                          key={item}
+                          className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80"
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
                 ))}
-              </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="space-y-3 sm:hidden">
               {skills.map((skill) => (
-                <TabsContent key={skill.title} value={skill.title}>
-                  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                <Card key={skill.title} className="border-white/5 bg-white/5">
+                  <CardHeader className="flex-row items-center justify-between gap-3">
+                    <CardTitle className="text-base">{skill.title}</CardTitle>
+                    <Badge className="bg-white/10 text-xs text-white">
+                      {skill.items.length}
+                    </Badge>
+                  </CardHeader>
+                  <CardContent className="grid gap-2 pt-0">
                     {skill.items.map((item) => (
                       <div
                         key={item}
-                        className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80"
+                        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80"
                       >
                         {item}
                       </div>
                     ))}
-                  </div>
-                </TabsContent>
+                  </CardContent>
+                </Card>
               ))}
-            </Tabs>
+            </div>
           </section>
 
           <section>
@@ -227,7 +252,7 @@ function App() {
             <div className="section-grid">
               {projects.map((project) => (
                 <Card key={project.name} className="flex flex-col">
-                  <CardHeader>
+                  <CardHeader className="gap-3">
                     <CardTitle className="flex items-center justify-between text-white">
                       {project.name}
                       {project.link ? (
@@ -274,8 +299,8 @@ function App() {
             <div className="flex flex-col gap-4">
               {experience.map((item) => (
                 <Card key={item.company + item.period}>
-                  <CardHeader className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                    <div>
+                  <CardHeader className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
+                    <div className="space-y-1.5">
                       <CardTitle className="text-white">
                         {item.company}
                       </CardTitle>
