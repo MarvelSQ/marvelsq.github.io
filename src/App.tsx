@@ -48,15 +48,20 @@ function SectionTitle({
   );
 }
 
+type ThemeMode = "system" | "light" | "dark";
+
 function App() {
-  const getInitialTheme = (): "light" | "dark" => {
-    if (typeof window === "undefined") return "light";
+  const getInitialThemeMode = (): ThemeMode => {
+    if (typeof window === "undefined") return "system";
     const stored = localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
+    return "system";
+  };
+
+  const getSystemTheme = () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
-  };
 
   const resolveLocale = (value: string | null): Locale => {
     if (value === "zh") return "zh";
@@ -71,10 +76,12 @@ function App() {
   };
 
   const [lang, setLang] = useState<Locale>(initialLocale);
-  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
-  const [isSystemTheme, setIsSystemTheme] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return !localStorage.getItem("theme");
+  const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialThemeMode);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem("theme");
+    if (stored === "light" || stored === "dark") return stored;
+    return getSystemTheme();
   });
 
   useEffect(() => {
@@ -87,7 +94,7 @@ function App() {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
 
     const syncSystemTheme = (event: MediaQueryListEvent | MediaQueryList) => {
-      if (isSystemTheme) {
+      if (themeMode === "system") {
         setTheme(event.matches ? "dark" : "light");
       }
     };
@@ -95,7 +102,17 @@ function App() {
     syncSystemTheme(media);
     media.addEventListener("change", syncSystemTheme);
     return () => media.removeEventListener("change", syncSystemTheme);
-  }, [isSystemTheme]);
+  }, [themeMode]);
+
+  useEffect(() => {
+    if (themeMode === "system") {
+      localStorage.removeItem("theme");
+      setTheme(getSystemTheme());
+    } else {
+      setTheme(themeMode);
+      localStorage.setItem("theme", themeMode);
+    }
+  }, [themeMode]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -104,13 +121,7 @@ function App() {
     } else {
       root.classList.remove("dark");
     }
-
-    if (isSystemTheme) {
-      localStorage.removeItem("theme");
-    } else {
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme, isSystemTheme]);
+  }, [theme]);
 
   useEffect(() => {
     const lightColor = "#f8fafc";
@@ -144,6 +155,19 @@ function App() {
     repos,
   } = t;
 
+  const themeLabel =
+    themeMode === "system"
+      ? lang === "en"
+        ? "System"
+        : "跟随系统"
+      : themeMode === "light"
+      ? lang === "en"
+        ? "Light"
+        : "浅色"
+      : lang === "en"
+      ? "Dark"
+      : "深色";
+
   return (
     <div className="relative min-h-screen bg-grid bg-[size:24px_24px]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)_/_0.14),transparent_25%),radial-gradient(circle_at_75%_0%,hsl(var(--accent)_/_0.12),transparent_20%)]" />
@@ -170,44 +194,39 @@ function App() {
               >
                 {lang === "en" ? "中文" : "English"}
               </Button>
-              <Button
-                variant={isSystemTheme ? "default" : "outline"}
-                size="sm"
-                onClick={() => {
-                  setIsSystemTheme(true);
-                  setTheme(
-                    window.matchMedia("(prefers-color-scheme: dark)").matches
-                      ? "dark"
-                      : "light"
-                  );
-                }}
-                className="gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                {lang === "en" ? "System" : "跟随系统"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setIsSystemTheme(false);
-                  setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-                }}
-                className="gap-2"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-                {isSystemTheme
-                  ? lang === "en"
-                    ? "Auto"
-                    : "自动"
-                  : theme === "dark"
-                  ? "Light"
-                  : "Dark"}
-              </Button>
+              <div className="relative">
+                <Button variant="outline" size="sm" className="gap-2 pr-10">
+                  {themeMode === "dark" ? (
+                    <Moon className="h-4 w-4" />
+                  ) : themeMode === "light" ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" />
+                  )}
+                  {themeLabel}
+                  <span className="pointer-events-none absolute right-3 text-muted-foreground">
+                    ⌄
+                  </span>
+                </Button>
+                <select
+                  aria-label={lang === "en" ? "Theme" : "主题"}
+                  value={themeMode}
+                  onChange={(event) =>
+                    setThemeMode(event.target.value as ThemeMode)
+                  }
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                >
+                  <option value="system">
+                    {lang === "en" ? "System" : "跟随系统"}
+                  </option>
+                  <option value="light">
+                    {lang === "en" ? "Light" : "浅色"}
+                  </option>
+                  <option value="dark">
+                    {lang === "en" ? "Dark" : "深色"}
+                  </option>
+                </select>
+              </div>
               <Button asChild variant="outline" size="sm">
                 <a
                   href="https://github.com/marvelsq"
