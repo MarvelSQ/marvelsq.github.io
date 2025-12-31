@@ -112,6 +112,24 @@ function App() {
     }
   }, [theme, isSystemTheme]);
 
+  useEffect(() => {
+    const lightColor = "#f8fafc";
+    const darkColor = "#0d1525";
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    const appleStatusMeta = document.querySelector(
+      'meta[name="apple-mobile-web-app-status-bar-style"]'
+    );
+
+    themeMeta?.setAttribute(
+      "content",
+      theme === "dark" ? darkColor : lightColor
+    );
+    appleStatusMeta?.setAttribute(
+      "content",
+      theme === "dark" ? "black-translucent" : "default"
+    );
+  }, [theme]);
+
   const t = content[lang];
   const ui = uiText[lang];
 
