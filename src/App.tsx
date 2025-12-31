@@ -32,15 +32,15 @@ function SectionTitle({
   eyebrow: string;
 }) {
   return (
-    <div className="mb-6 flex items-center gap-3 text-white">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-brand-200">
+    <div className="mb-6 flex items-center gap-3 text-foreground">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-primary">
         {icon ?? <Sparkles className="h-5 w-5" />}
       </div>
       <div>
-        <p className="text-xs uppercase tracking-[0.3em] text-white/50">
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
           {eyebrow}
         </p>
-        <h2 className="text-2xl font-semibold">{title}</h2>
+        <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
       </div>
     </div>
   );
@@ -83,18 +83,20 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-grid bg-[size:24px_24px]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(79,92,245,0.16),transparent_25%),radial-gradient(circle_at_80%_0%,rgba(37,221,186,0.2),transparent_20%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)_/_0.14),transparent_25%),radial-gradient(circle_at_75%_0%,hsl(var(--accent)_/_0.12),transparent_20%)]" />
 
       <div className="relative mx-auto flex max-w-7xl flex-col gap-10 px-4 pb-16 pt-10 sm:gap-12 sm:px-6 md:px-8">
         <header className="sticky top-4 z-10">
           <div className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-3 md:flex-nowrap">
             <div className="flex min-w-[220px] flex-1 items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg shadow-brand-500/40">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30">
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm text-white/60">{hero.status}</p>
-                <p className="text-lg font-semibold">{hero.name}</p>
+                <p className="text-sm text-muted-foreground">{hero.status}</p>
+                <p className="text-lg font-semibold text-foreground">
+                  {hero.name}
+                </p>
               </div>
             </div>
             <div className="flex flex-1 flex-wrap items-center justify-end gap-2 md:flex-nowrap">
@@ -126,25 +128,25 @@ function App() {
         <main className="flex flex-col gap-10 md:gap-12">
           <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <Card className="overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-transparent to-emerald-400/10" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-primary/8" />
               <CardHeader className="relative gap-3">
-                <div className="flex items-center gap-3 text-white/70">
+                <div className="flex items-center gap-3 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
                   <span>{hero.location}</span>
                 </div>
-                <CardTitle className="text-3xl text-white sm:text-4xl md:text-5xl">
+                <CardTitle className="text-3xl text-foreground sm:text-4xl md:text-5xl">
                   {hero.role}
                 </CardTitle>
-                <CardDescription className="text-lg text-white/80">
+                <CardDescription className="text-lg text-muted-foreground">
                   {hero.headline}
                 </CardDescription>
-                <div className="mt-3 flex flex-wrap gap-3 text-sm text-white/70">
+                <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted-foreground">
                   {highlights.map((item) => (
                     <span
                       key={item}
-                      className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2"
+                      className="inline-flex items-center gap-2 rounded-full bg-muted/60 px-4 py-2"
                     >
-                      <Sparkles className="h-4 w-4 text-brand-200" />
+                      <Sparkles className="h-4 w-4 text-primary" />
                       {item}
                     </span>
                   ))}
@@ -156,8 +158,8 @@ function App() {
                     <Mail className="mr-2 h-5 w-5" /> {ui.emailMe}
                   </a>
                 </Button>
-                <Badge className="flex items-center gap-2 bg-emerald-400/15 text-emerald-100">
-                  <Sparkles className="h-4 w-4 text-emerald-200" />
+                <Badge className="flex items-center gap-2 bg-primary/10 text-primary">
+                  <Sparkles className="h-4 w-4 text-primary" />
                   {ui.openToWork}
                 </Badge>
               </CardContent>
@@ -165,14 +167,17 @@ function App() {
 
             <Card>
               <CardHeader className="gap-4">
-                <div className="flex items-center gap-3 text-sm text-white/70">
-                  <Mail className="h-4 w-4 text-brand-200" />
-                  <a className="hover:text-white" href={`mailto:${hero.email}`}>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <Mail className="h-4 w-4 text-primary" />
+                  <a
+                    className="hover:text-foreground"
+                    href={`mailto:${hero.email}`}
+                  >
                     {hero.email}
                   </a>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-white/70">
-                  <MapPin className="h-4 w-4 text-brand-200" />
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 text-primary" />
                   <span>{hero.location}</span>
                 </div>
               </CardHeader>
@@ -208,7 +213,7 @@ function App() {
                       {skill.items.map((item) => (
                         <div
                           key={item}
-                          className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80"
+                          className="rounded-xl border border-border/70 bg-muted/70 px-4 py-3 text-sm text-muted-foreground"
                         >
                           {item}
                         </div>
@@ -221,10 +226,13 @@ function App() {
 
             <div className="space-y-3 sm:hidden">
               {skills.map((skill) => (
-                <Card key={skill.title} className="border-white/5 bg-white/5">
+                <Card
+                  key={skill.title}
+                  className="border-border/60 bg-card/80 backdrop-blur"
+                >
                   <CardHeader className="flex-row items-center justify-between gap-3">
                     <CardTitle className="text-base">{skill.title}</CardTitle>
-                    <Badge className="bg-white/10 text-xs text-white">
+                    <Badge className="bg-muted text-xs text-muted-foreground">
                       {skill.items.length}
                     </Badge>
                   </CardHeader>
@@ -232,7 +240,7 @@ function App() {
                     {skill.items.map((item) => (
                       <div
                         key={item}
-                        className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80"
+                        className="rounded-lg border border-border bg-muted/60 px-4 py-2 text-sm text-muted-foreground"
                       >
                         {item}
                       </div>
@@ -253,21 +261,21 @@ function App() {
               {projects.map((project) => (
                 <Card key={project.name} className="flex flex-col">
                   <CardHeader className="gap-3">
-                    <CardTitle className="flex items-center justify-between text-white">
+                    <CardTitle className="flex items-center justify-between text-foreground">
                       {project.name}
                       {project.link ? (
                         <a
                           href={project.link}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-sm font-normal text-brand-200 hover:text-brand-100"
+                          className="text-sm font-normal text-primary hover:text-primary/80"
                         >
                           {ui.viewProject}
                           <ArrowUpRight className="ml-1 inline h-4 w-4" />
                         </a>
                       ) : null}
                     </CardTitle>
-                    <CardDescription className="flex items-center gap-2 text-white/70">
+                    <CardDescription className="flex items-center gap-2 text-muted-foreground">
                       <Badge variant="outline" className="text-xs">
                         {project.role}
                       </Badge>
@@ -275,11 +283,11 @@ function App() {
                       <span>{project.period}</span>
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col gap-4 text-white/80">
+                  <CardContent className="flex flex-1 flex-col gap-4 text-muted-foreground">
                     <p className="leading-relaxed">{project.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {project.stack.map((item) => (
-                        <Badge key={item} className="bg-white/10 text-white">
+                        <Badge key={item} className="bg-muted text-foreground">
                           {item}
                         </Badge>
                       ))}
@@ -301,22 +309,22 @@ function App() {
                 <Card key={item.company + item.period}>
                   <CardHeader className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
                     <div className="space-y-1.5">
-                      <CardTitle className="text-white">
+                      <CardTitle className="text-foreground">
                         {item.company}
                       </CardTitle>
-                      <CardDescription className="text-white/70">
+                      <CardDescription className="text-muted-foreground">
                         {item.role}
                       </CardDescription>
                     </div>
-                    <Badge className="bg-white/10 text-white">
+                    <Badge className="bg-muted text-foreground">
                       {item.period}
                     </Badge>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <ul className="space-y-2 text-sm text-white/80">
+                    <ul className="space-y-2 text-sm text-muted-foreground">
                       {item.details.map((detail) => (
                         <li key={detail} className="flex gap-2">
-                          <span className="mt-1 h-2 w-2 rounded-full bg-brand-400" />
+                          <span className="mt-1 h-2 w-2 rounded-full bg-primary" />
                           <span>{detail}</span>
                         </li>
                       ))}
@@ -338,13 +346,15 @@ function App() {
                 {education.map((edu) => (
                   <Card key={edu.school}>
                     <CardHeader>
-                      <CardTitle className="text-white">{edu.school}</CardTitle>
-                      <CardDescription className="text-white/70">
+                      <CardTitle className="text-foreground">
+                        {edu.school}
+                      </CardTitle>
+                      <CardDescription className="text-muted-foreground">
                         {edu.focus}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-wrap items-center gap-3 text-sm text-white/70">
-                      <Badge className="bg-white/10 text-white">
+                    <CardContent className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <Badge className="bg-muted text-foreground">
                         {edu.degree}
                       </Badge>
                       <span>{edu.period}</span>
@@ -355,10 +365,10 @@ function App() {
             </div>
 
             <Card className="relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-brand-500/10" />
+              <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-primary/12" />
               <CardHeader className="relative">
                 <SectionTitle title={ui.path} eyebrow={ui.sectionLabel} />
-                <CardDescription className="text-base leading-relaxed text-white/80">
+                <CardDescription className="text-base leading-relaxed text-muted-foreground">
                   {story}
                 </CardDescription>
               </CardHeader>
@@ -366,7 +376,7 @@ function App() {
           </section>
         </main>
 
-        <footer className="pb-4 text-center text-sm text-white/60">
+        <footer className="pb-4 text-center text-sm text-muted-foreground">
           {ui.footer}
         </footer>
       </div>

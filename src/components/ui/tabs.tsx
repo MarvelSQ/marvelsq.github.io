@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-12 items-center justify-center rounded-full bg-white/5 p-1 text-white shadow-inner shadow-black/30 backdrop-blur",
+      "inline-flex h-12 items-center justify-center rounded-full border border-border bg-muted/70 p-1 text-muted-foreground shadow-inner shadow-black/20 backdrop-blur",
       className
     )}
     {...props}
@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex min-w-[104px] items-center justify-center rounded-full px-3 py-2 text-xs font-medium text-white/80 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070a18] data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-lg sm:min-w-[120px] sm:px-4 sm:text-sm",
+      "inline-flex min-w-[104px] items-center justify-center rounded-full px-3 py-2 text-xs font-medium text-muted-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:min-w-[120px] sm:px-4 sm:text-sm",
       className
     )}
     {...props}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-float focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#070a18]",
+      "mt-6 rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       className
     )}
     {...props}

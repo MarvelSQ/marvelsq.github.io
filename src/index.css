@@ -5,8 +5,26 @@
 @tailwind utilities;
 
 :root {
-  color: #0b1021;
-  background-color: #070a18;
+  --background: 222 47% 10%;
+  --foreground: 220 13% 95%;
+  --card: 222 47% 12%;
+  --card-foreground: 220 13% 95%;
+  --popover: 222 47% 12%;
+  --popover-foreground: 220 13% 95%;
+  --primary: 221 83% 60%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 222 24% 18%;
+  --secondary-foreground: 220 13% 90%;
+  --muted: 222 24% 18%;
+  --muted-foreground: 220 12% 65%;
+  --accent: 222 24% 18%;
+  --accent-foreground: 220 13% 95%;
+  --destructive: 0 62% 40%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 222 24% 18%;
+  --input: 222 24% 18%;
+  --ring: 221 83% 60%;
+  --radius: 0.9rem;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,14 +34,24 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(
-      circle at 20% 20%,
-      rgba(79, 92, 245, 0.24),
+  background-color: hsl(var(--background));
+  background-image: radial-gradient(
+      circle at 18% 18%,
+      hsl(var(--primary) / 0.08),
       transparent 35%
     ),
-    radial-gradient(circle at 80% 0%, rgba(37, 221, 186, 0.24), transparent 30%),
-    linear-gradient(180deg, #0b1021 0%, #090d1a 40%, #050712 100%);
-  color: #e6e9f5;
+    radial-gradient(
+      circle at 82% 6%,
+      hsl(var(--accent) / 0.08),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      hsl(var(--background)) 0%,
+      hsl(var(--card)) 55%,
+      hsl(var(--background)) 100%
+    );
+  color: hsl(var(--foreground));
 }
 
 #root {
@@ -31,6 +59,14 @@ body {
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
   h1,
   h2,
   h3,
@@ -48,7 +84,7 @@ body {
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-float;
+    @apply bg-card/80 backdrop-blur-xl border border-border/70 shadow-card;
   }
 
   .section-grid {
